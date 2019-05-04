@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="duration_text_size">18dp</dimen>
+    <dimen name="circle_sos_floating_btn">90dp</dimen>
+    <dimen name="sos_text_size_floating_btn">24dp</dimen>
+</resources>

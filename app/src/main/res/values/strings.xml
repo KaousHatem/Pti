@@ -1,3 +1,61 @@
 <resources>
-    <string name="app_name">Pti</string>
+    <string name="app_name">PTI</string>
+    <string name="turn_on">Turn On</string>
+    <string name="turn_off">Turn Off</string>
+    <string name="setting">Setting</string>
+    <string name="sos">S.O.S</string>
+
+
+    <string name="alert_mode">Mode d\'alerte</string>
+    <string name="emergency">Contact d\'urgence</string>
+    <string name="duration_option">Paramètre de durée</string>
+    <string name="about">A propos</string>
+    <string name="sensibility_params">Sensibilité de detection</string>
+    <string name="pref_mode_alert_summary">Perte de verticalité, Immobilté permanente</string>
+
+    <string name="press_btn">Bouton S.O.S</string>
+    <string name="prealerte_duration">Pre-alarme</string>
+    <string name="preprealerte_duration">Prepre-alarme</string>
+
+    <string-array name="pref_mode_alert">
+        <item>Perte de verticalité</item>
+        <item>Immobilité</item>
+        <item>Alarme Manuelle</item>
+    </string-array>
+
+    <string-array name="key_mode_alert">
+        <item>verticality</item>
+        <item>immobility</item>
+    </string-array>
+
+    <string name="pref_key_mode_alerte">mode_alerte</string>
+    <string name="pref_key_active_mode">active</string>
+
+    <string name="key_verticality">verticality</string>
+    <string name="key_immobility">immobility</string>
+    <string name="key_manuelle_alarme">manuelle</string>
+
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="pref_key_contact">emergency_contact</string>
+    <string name="key_contact">contacts</string>
+
+    <string name="pref_key_duration">duration</string>
+    <string name="key_pre_alerte_m">pre_alerte_m</string>
+    <string name="key_pre_alerte_s">pre_alerte_s</string>
+    <string name="key_pre2_alerte_m">pr2_alerte_m</string>
+    <string name="key_pre2_alerte_s">pr2_alerte_s</string>
+    <string name="key_press_btn">press_btn_duration</string>
+
+    <string name="pref_key_sensibility">sensibilities</string>
+    <string name="key_sensiblity_verticality">sensiblity_verticality</string>
+    <string name="key_sensiblity_immobility">sensiblity_immobility</string>
+
+    <string name="channel_name">mode_active</string>
+    <string name="channel_description">this is channel description</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

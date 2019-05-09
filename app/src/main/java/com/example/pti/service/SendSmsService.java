@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -72,7 +73,7 @@ public class SendSmsService extends LocationAlertListener {
             @Override
             public void onIntegerChanged(int newValue) {
                 Log.i("TAG", "onIntegerChanged: "+newValue);
-                if (newValue == 1){
+                if (newValue == 2){
                     send_alert_sms();
 
                     //stopSelf();
@@ -102,7 +103,7 @@ public class SendSmsService extends LocationAlertListener {
             locationUpdateListener = null;
         }
         unregisterReceiver(sentStatusReceiver);
-        unregisterReceiver(deliveredStatusReceiver);
+        //unregisterReceiver(deliveredStatusReceiver);
     }
 
     private void send_alert_sms(){
@@ -131,6 +132,7 @@ public class SendSmsService extends LocationAlertListener {
         }else {
             messageText = "C'est un messsage d'alerte de type: AIDE SOS.\r\nInformation sur la position:inconnu";
         }
+
         ArrayList<PendingIntent> sentPendingIntents = new ArrayList<PendingIntent>();
         ArrayList<PendingIntent> deliveredPendingIntents = new ArrayList<PendingIntent>();
         String number = contact.getNumber();
@@ -140,20 +142,19 @@ public class SendSmsService extends LocationAlertListener {
         PendingIntent deliveredIntent = PendingIntent.getBroadcast(this,0,new Intent("SMS_DELIVERED"),0);
         try{
             for (int i =0;i<parts.size();i++){
-                sentPendingIntents.add(sentIntent);
-                deliveredPendingIntents.add(deliveredIntent);
+                sentPendingIntents.add(i,sentIntent);
+                deliveredPendingIntents.add(i,deliveredIntent);
             }
-            smsManager.sendMultipartTextMessage(number,null, parts,sentPendingIntents,deliveredPendingIntents);
+            smsManager.sendMultipartTextMessage(number,null, parts,sentPendingIntents,null);
             Log.i("TAG", "onLocationChanged: sent");
-            //notificationOn(1);
+            notificationOn(1);
             //Toast.makeText(this, "sms sent", Toast.LENGTH_SHORT).show();
-
-            stopSelf();
         }catch (Exception e){
             e.printStackTrace();
-            //notificationOn(0);
+            notificationOn(0);
             //Toast.makeText(this, "sms not sent", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void broadcast(){
@@ -162,35 +163,40 @@ public class SendSmsService extends LocationAlertListener {
             public void onReceive(Context context, Intent intent) {
                 String s = "Unkown Error";
                 switch (getResultCode()) {
-                    case Activity.RESULT_OK:
+                    /*case Activity.RESULT_OK:
                         s = "Message Sent Successfully !!";
                         notificationOn(1);
                         break;
+                        */
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                         s = "Generic Failure Error";
                         notificationOn(0);
+                        Toast.makeText(SendSmsService.this, ""+s, Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
                         s = "Error : No Service Available";
                         notificationOn(0);
+                        Toast.makeText(SendSmsService.this, ""+s, Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NULL_PDU:
                         s = "Error : Null PDU";
                         notificationOn(0);
+                        Toast.makeText(SendSmsService.this, ""+s, Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
                         s = "Error : Radio is off";
                         notificationOn(0);
+                        Toast.makeText(SendSmsService.this, ""+s, Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
                 }
-                //Toast.makeText(SendSmsService.this, ""+s, Toast.LENGTH_SHORT).show();
-                stopSelf();
+                Log.i("TAG", "broadcast: sentStatusReceiver "+getResultCode() );
+
 
             }
         };
-        deliveredStatusReceiver = new BroadcastReceiver() {
+        /*deliveredStatusReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String s = "Message Not Delivered";
@@ -201,11 +207,13 @@ public class SendSmsService extends LocationAlertListener {
                     case Activity.RESULT_CANCELED:
                         break;
                 }
-                //Toast.makeText(SendSmsService.this, ""+s, Toast.LENGTH_SHORT).show();
+                Log.i("TAG", "broadcast: deliveredStatusReceiver "+getResultCode() );
+                Toast.makeText(SendSmsService.this, ""+s, Toast.LENGTH_SHORT).show();
             }
-        };
+        };*/
+        Log.i("TAG", "broadcast: running");
         registerReceiver(sentStatusReceiver,new IntentFilter("SENT_SMS"));
-        registerReceiver(deliveredStatusReceiver,new IntentFilter("SMS_DELIVERED"));
+        /*registerReceiver(deliveredStatusReceiver,new IntentFilter("SMS_DELIVERED"));*/
 
     }
 

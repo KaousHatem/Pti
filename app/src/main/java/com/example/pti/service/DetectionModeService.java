@@ -231,9 +231,9 @@ public class DetectionModeService extends LocationAlertListener {
         try{
             for (int i =0;i<parts.size();i++){
                 sentPendingIntents.add(sentIntent);
-                deliveredPendingIntents.add(deliveredIntent);
+                //deliveredPendingIntents.add(deliveredIntent);
             }
-            smsManager.sendMultipartTextMessage(number,null, parts,sentPendingIntents,deliveredPendingIntents);
+            smsManager.sendMultipartTextMessage(number,null, parts,sentPendingIntents,null);
             Log.i("TAG", "onLocationChanged: sent");
             notificationOn(1);
             //Toast.makeText(this, "sms sent", Toast.LENGTH_SHORT).show();
@@ -260,34 +260,40 @@ public class DetectionModeService extends LocationAlertListener {
             public void onReceive(Context context, Intent intent) {
                 String s = "Unkown Error";
                 switch (getResultCode()) {
-                    case Activity.RESULT_OK:
+                    /*case Activity.RESULT_OK:
                         s = "Message Sent Successfully !!";
                         notificationOn(1);
                         break;
+                        */
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                         s = "Generic Failure Error";
                         notificationOn(0);
+                        Toast.makeText(DetectionModeService.this, ""+s, Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
                         s = "Error : No Service Available";
                         notificationOn(0);
+                        Toast.makeText(DetectionModeService.this, ""+s, Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NULL_PDU:
                         s = "Error : Null PDU";
                         notificationOn(0);
+                        Toast.makeText(DetectionModeService.this, ""+s, Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
                         s = "Error : Radio is off";
                         notificationOn(0);
+                        Toast.makeText(DetectionModeService.this, ""+s, Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
                 }
-                Toast.makeText(DetectionModeService.this, ""+s, Toast.LENGTH_SHORT).show();
+                Log.i("TAG", "broadcast: sentStatusReceiver "+getResultCode() );
+
 
             }
         };
-        deliveredStatusReceiver = new BroadcastReceiver() {
+        /*deliveredStatusReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String s = "Message Not Delivered";
@@ -298,11 +304,13 @@ public class DetectionModeService extends LocationAlertListener {
                     case Activity.RESULT_CANCELED:
                         break;
                 }
-                Toast.makeText(DetectionModeService.this, ""+s, Toast.LENGTH_SHORT).show();
+                Log.i("TAG", "broadcast: deliveredStatusReceiver "+getResultCode() );
+                Toast.makeText(SendSmsService.this, ""+s, Toast.LENGTH_SHORT).show();
             }
-        };
+        };*/
+        Log.i("TAG", "broadcast: running");
         registerReceiver(sentStatusReceiver,new IntentFilter("SENT_SMS"));
-        registerReceiver(deliveredStatusReceiver,new IntentFilter("SMS_DELIVERED"));
+        /*registerReceiver(deliveredStatusReceiver,new IntentFilter("SMS_DELIVERED"));*/
 
     }
 
@@ -414,7 +422,7 @@ public class DetectionModeService extends LocationAlertListener {
 
         threadRunning = false;
         unregisterReceiver(sentStatusReceiver);
-        unregisterReceiver(deliveredStatusReceiver);
+        //unregisterReceiver(deliveredStatusReceiver);
 
         removeLocationUpdateListener(locationUpdateListener);
 

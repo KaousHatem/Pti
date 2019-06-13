@@ -215,6 +215,7 @@ public class DetectionModeService extends LocationAlertListener {
     }
 
     private void sendSms(Contact contact){
+
         String messageText;
         if (Config.getInstance().getCurrentLatitude()!=null && Config.getInstance().getCurrentLongitude()!=null ){
             messageText = "C'est un messsage d'alerte de type: "+type_sos_message+".\r\nInformation sur la position:\nLatitude: "+Config.getInstance().getCurrentLatitude()+"\nLongitude: "+Config.getInstance().getCurrentLongitude()+"\nLe lien sur google Map: https://www.google.com/maps/search/?api=1&query="+Config.getInstance().getCurrentLatitude()+","+Config.getInstance().getCurrentLongitude();

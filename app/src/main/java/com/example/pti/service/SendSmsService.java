@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -67,13 +68,40 @@ public class SendSmsService extends LocationAlertListener {
 
         getlocation();
 
+        final CountDownTimer count = new CountDownTimer(2000,1000) {
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                send_alert_sms();
+                CountDownTimer count2 = new CountDownTimer(300000,1000) {
+                    @Override
+                    public void onTick(long l) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        stopSelf();
+                    }
+                };
+                getlocation();
+                count2.start();
+
+            }
+        };
+
         obsInt = new ObservableInteger();
         obsInt.set(0);
         obsInt.setOnIntegerChangeListener(new ObservableInteger.OnIntegerChangeListener() {
             @Override
             public void onIntegerChanged(int newValue) {
                 Log.i("TAG", "onIntegerChanged: "+newValue);
-                if (newValue == 2){
+                if (newValue == 1){
+                    count.cancel();
                     send_alert_sms();
 
                     //stopSelf();
@@ -86,6 +114,11 @@ public class SendSmsService extends LocationAlertListener {
                 }
             }
         });
+        count.start();
+
+
+
+
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -126,6 +159,7 @@ public class SendSmsService extends LocationAlertListener {
     }
 
     private void sendSms(Contact contact){
+        Toast.makeText(this, "Envoi en cours", Toast.LENGTH_SHORT).show();
         String messageText;
         if (Config.getInstance().getCurrentLatitude()!=null && Config.getInstance().getCurrentLongitude()!=null ){
             messageText = "C'est un messsage d'alerte de type: AIDE SOS.\r\nInformation sur la position:\nLatitude: "+Config.getInstance().getCurrentLatitude()+"\nLongitude: "+Config.getInstance().getCurrentLongitude()+"\nLe lien sur google Map: https://www.google.com/maps/search/?api=1&query="+Config.getInstance().getCurrentLatitude()+","+Config.getInstance().getCurrentLongitude();
